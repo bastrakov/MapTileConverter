@@ -45,7 +45,7 @@ namespace TileWorker
 						var leftTop = TileMathBase.TileXY2PixelXY(sphericalTileIndexX, sphericalTileIndexY);
 						SphericalTileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom, out double latitude, out double longitude);
 						var resultXY = Wgs84TileMath.LatLongToPixelXY(latitude, longitude, zoom);
-						return FindReplaceFromSphericalToWgs84(sphericalTileIndexX, sphericalTileIndexY, zoom, resultXY);
+						return FindReplace(sphericalTileIndexX, sphericalTileIndexY, zoom, resultXY);
 				}
 
 				public static TileReplace TileFromWgs84ToSpherical(int wgs84TileIndexX, int wgs84TileIndexY, int zoom)
@@ -53,7 +53,7 @@ namespace TileWorker
 						var leftTop = TileMathBase.TileXY2PixelXY(wgs84TileIndexX, wgs84TileIndexY);
 						var latlon = Wgs84TileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom);
 						SphericalTileMath.LatLongToPixelXY(latlon.X, latlon.Y, zoom, out int pixelX, out int pixelY);
-						return FindReplaceFromWgs84ToSpherical(wgs84TileIndexX, wgs84TileIndexY, zoom, new Point(pixelX, pixelY));
+						return FindReplace(wgs84TileIndexX, wgs84TileIndexY, zoom, new Point(pixelX, pixelY));
 				}
 
 				private static void SaveTiles(string xyzInPathFormat, string xyzOutPathFormat, IEnumerable<TileReplace> tileReplacesList)
@@ -90,12 +90,12 @@ namespace TileWorker
 						return result;
 				}
 
-				private static TileReplace FindReplaceFromSphericalToWgs84(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point wgs84XY)
+				private static TileReplace FindReplace(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point resultXY)
 				{
-						var tileXYindex = TileMathBase.PixelXY2TileXY(wgs84XY.X, wgs84XY.Y);
+						var tileXYindex = TileMathBase.PixelXY2TileXY(resultXY.X, resultXY.Y);
 
-						var xShift = wgs84XY.X % TileMathBase.TileSize;
-						var yShift = wgs84XY.Y % TileMathBase.TileSize;
+						var xShift = resultXY.X % TileMathBase.TileSize;
+						var yShift = resultXY.Y % TileMathBase.TileSize;
 
 						if (xShift == 0 && yShift == 0)
 						{
@@ -126,44 +126,6 @@ namespace TileWorker
 								return result3;
 						}
 				}
-
-				private static TileReplace FindReplaceFromWgs84ToSpherical(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point sphericalXY)
-				{
-						var tileXYindex = TileMathBase.PixelXY2TileXY(sphericalXY.X, sphericalXY.Y);
-
-						var xShift = sphericalXY.X % TileMathBase.TileSize;
-						var yShift = sphericalXY.Y % TileMathBase.TileSize;
-
-						if (xShift == 0 && yShift == 0)
-						{
-								//just copy.
-								var result1 = new TileReplace(tileXYindex.X, tileXYindex.Y, zoom);
-								result1.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
-								result1.Shift = new Point(0, 0);
-								return result1;
-						}
-						else if (xShift == 0 && yShift != 0)
-						{
-								//can try to create Y+1 tile.
-								var result2 = new TileReplace(tileXYindex.X, tileXYindex.Y + 1, zoom);
-								result2.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
-								result2.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY + 1));
-								result2.Shift = new Point(0, yShift);
-								return result2;
-						}
-						else
-						{
-								//need 4 tiles to create a one new.
-								var result3 = new TileReplace(tileXYindex.X + 1, tileXYindex.Y + 1, zoom);
-								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
-								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY + 1));
-								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX + 1, sphericalTileIndexY));
-								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX + 1, sphericalTileIndexY + 1));
-								result3.Shift = new Point(xShift, yShift);
-								return result3;
-						}
-				}
-
 
 				internal class PathFormat
 				{
