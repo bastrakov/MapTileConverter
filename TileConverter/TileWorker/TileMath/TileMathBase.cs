@@ -24,11 +24,6 @@ namespace TileWorker.TileMath
 				public static readonly double COM = 0.5 * ECCENT;
 
 
-				//public static readonly double PI_2 = Math.PI / 2.0;
-
-
-
-
 				/// <summary>  
 				/// Clips a number to the specified minimum and maximum values.  
 				/// </summary>  

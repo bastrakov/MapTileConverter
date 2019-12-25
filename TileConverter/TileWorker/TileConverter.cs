@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -13,18 +12,33 @@ namespace TileWorker
 		public class TileConverter
 		{
 
-
-
 				public static void ConvertFromSphericalToWgs84(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
 				{
 						var tileIndexList = ReadAllFiles(inTilesDir, xyzInPathFormat);
 						if (tileIndexList.Count > 0)
 						{
 								var tileReplacesList = tileIndexList.Select(i => TileFromSphericalToWgs84(i.X, i.Y, i.Zoom));
-								SaveTiles(inTilesDir + xyzInPathFormat, outTilesDir + xyzOutPathFormat, tileReplacesList);
+
+								SaveTiles(
+										Path.Combine(inTilesDir, xyzInPathFormat),
+										Path.Combine(outTilesDir, xyzOutPathFormat),
+										tileReplacesList);
 						}
 				}
 
+				public static void ConvertFromWgs84ToSpherical(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
+				{
+						var tileIndexList = ReadAllFiles(inTilesDir, xyzInPathFormat);
+						if (tileIndexList.Count > 0)
+						{
+								var tileReplacesList = tileIndexList.Select(i => TileFromWgs84ToSpherical(i.X, i.Y, i.Zoom));
+
+								SaveTiles(
+										Path.Combine(inTilesDir, xyzInPathFormat),
+										Path.Combine(outTilesDir, xyzOutPathFormat),
+										tileReplacesList);
+						}
+				}
 
 				public static TileReplace TileFromSphericalToWgs84(int sphericalTileIndexX, int sphericalTileIndexY, int zoom)
 				{
@@ -55,23 +69,11 @@ namespace TileWorker
 								}
 
 								if (isAllTileFilesExist)
-										CreateAndSaveResultTile(tileIndex, xyzOutPathFormat);
+								{
+										var outTileFilePath = string.Format(xyzOutPathFormat, tileIndex.NewX, tileIndex.NewY, tileIndex.Zoom);
+										ImageHelper.JoinTilesToOneImageAndSave(tileIndex, xyzInPathFormat, outTileFilePath);
+								}
 						}
-				}
-
-				private static void CreateAndSaveResultTile(TileReplace tileReplace, string xyzOutPathFormat)
-				{
-						var outTileFilePath = string.Format(xyzOutPathFormat, tileReplace.NewX, tileReplace.NewY, tileReplace.Zoom);
-
-						if (!Directory.Exists(Path.GetDirectoryName(outTileFilePath)))
-								Directory.CreateDirectory(Path.GetDirectoryName(outTileFilePath));
-
-						using (StreamWriter bw = new StreamWriter(File.Create(outTileFilePath)))
-						{
-								bw.Write("test");
-								bw.Close();
-						}
-
 				}
 
 				private static List<TileIndex> ReadAllFiles(string dirPath, string xyzPathFormat)
