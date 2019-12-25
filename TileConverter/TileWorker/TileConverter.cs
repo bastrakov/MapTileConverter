@@ -45,15 +45,15 @@ namespace TileWorker
 						var leftTop = TileMathBase.TileXY2PixelXY(sphericalTileIndexX, sphericalTileIndexY);
 						SphericalTileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom, out double latitude, out double longitude);
 						var resultXY = Wgs84TileMath.LatLongToPixelXY(latitude, longitude, zoom);
-						return FindReplace(sphericalTileIndexX, sphericalTileIndexY, zoom, resultXY);
+						return FindReplaceFromSphericalToWgs84(sphericalTileIndexX, sphericalTileIndexY, zoom, resultXY);
 				}
 
 				public static TileReplace TileFromWgs84ToSpherical(int wgs84TileIndexX, int wgs84TileIndexY, int zoom)
 				{
 						var leftTop = TileMathBase.TileXY2PixelXY(wgs84TileIndexX, wgs84TileIndexY);
 						var latlon = Wgs84TileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom);
-						SphericalTileMath.LatLongToPixelXY(latlon.Y, latlon.X, zoom, out int pixelX, out int pixelY);
-						return FindReplace(wgs84TileIndexX, wgs84TileIndexY, zoom, new Point(pixelX, pixelY));
+						SphericalTileMath.LatLongToPixelXY(latlon.X, latlon.Y, zoom, out int pixelX, out int pixelY);
+						return FindReplaceFromWgs84ToSpherical(wgs84TileIndexX, wgs84TileIndexY, zoom, new Point(pixelX, pixelY));
 				}
 
 				private static void SaveTiles(string xyzInPathFormat, string xyzOutPathFormat, IEnumerable<TileReplace> tileReplacesList)
@@ -90,12 +90,12 @@ namespace TileWorker
 						return result;
 				}
 
-				private static TileReplace FindReplace(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point resultXY)
+				private static TileReplace FindReplaceFromSphericalToWgs84(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point wgs84XY)
 				{
-						var tileXYindex = TileMathBase.PixelXY2TileXY(resultXY.X, resultXY.Y);
+						var tileXYindex = TileMathBase.PixelXY2TileXY(wgs84XY.X, wgs84XY.Y);
 
-						var xShift = resultXY.X % TileMathBase.TileSize;
-						var yShift = resultXY.Y % TileMathBase.TileSize;
+						var xShift = wgs84XY.X % TileMathBase.TileSize;
+						var yShift = wgs84XY.Y % TileMathBase.TileSize;
 
 						if (xShift == 0 && yShift == 0)
 						{
@@ -127,16 +127,57 @@ namespace TileWorker
 						}
 				}
 
+				private static TileReplace FindReplaceFromWgs84ToSpherical(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point sphericalXY)
+				{
+						var tileXYindex = TileMathBase.PixelXY2TileXY(sphericalXY.X, sphericalXY.Y);
+
+						var xShift = sphericalXY.X % TileMathBase.TileSize;
+						var yShift = sphericalXY.Y % TileMathBase.TileSize;
+
+						if (xShift == 0 && yShift == 0)
+						{
+								//just copy.
+								var result1 = new TileReplace(tileXYindex.X, tileXYindex.Y, zoom);
+								result1.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
+								result1.Shift = new Point(0, 0);
+								return result1;
+						}
+						else if (xShift == 0 && yShift != 0)
+						{
+								//can try to create Y+1 tile.
+								var result2 = new TileReplace(tileXYindex.X, tileXYindex.Y + 1, zoom);
+								result2.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
+								result2.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY + 1));
+								result2.Shift = new Point(0, yShift);
+								return result2;
+						}
+						else
+						{
+								//need 4 tiles to create a one new.
+								var result3 = new TileReplace(tileXYindex.X + 1, tileXYindex.Y + 1, zoom);
+								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY));
+								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX, sphericalTileIndexY + 1));
+								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX + 1, sphericalTileIndexY));
+								result3.NeedTileIndex.Add(new Point(sphericalTileIndexX + 1, sphericalTileIndexY + 1));
+								result3.Shift = new Point(xShift, yShift);
+								return result3;
+						}
+				}
+
+
 				internal class PathFormat
 				{
 						public string XYZpathFormat { get; set; }
 
 						public int Xindex { get; set; }
-						public string Xremove { get; set; }
+						public string Xremove0 { get; set; }
+						public string Xremove1 { get; set; }
 						public int Yindex { get; set; }
-						public string Yremove { get; set; }
+						public string Yremove0 { get; set; }
+						public string Yremove1 { get; set; }
 						public int Zindex { get; set; }
-						public string Zremove { get; set; }
+						public string Zremove0 { get; set; }
+						public string Zremove1 { get; set; }
 
 
 						public PathFormat (string xyzPathFormat)
@@ -147,17 +188,23 @@ namespace TileWorker
 										if (xyzPathFormatParts[i].IndexOf("{0}") != -1)
 										{
 												Xindex = i;
-												Xremove = xyzPathFormatParts[i].Replace(@"{0}", "");
-										} 
+												var xStrParts = xyzPathFormatParts[i].Split(@"{0}");
+												Xremove0 = xStrParts[0];
+												Xremove1 = xStrParts[1];
+										}
 										else if (xyzPathFormatParts[i].IndexOf("{1}") != -1)
 										{
 												Yindex = i;
-												Yremove = xyzPathFormatParts[i].Replace(@"{1}", "");
+												var yStrParts = xyzPathFormatParts[i].Split(@"{1}");
+												Yremove0 = yStrParts[0];
+												Yremove1 = yStrParts[1];
 										}
 										else if (xyzPathFormatParts[i].IndexOf("{2}") != -1)
 										{
 												Zindex = i;
-												Zremove = xyzPathFormatParts[i].Replace(@"{2}", "");
+												var zStrParts = xyzPathFormatParts[i].Split(@"{2}");
+												Zremove0 = zStrParts[0];
+												Zremove1 = zStrParts[1];
 										}
 
 								}
@@ -177,22 +224,28 @@ namespace TileWorker
 								var parts = tilePath.Split(@"\");
 
 								var xStr = parts[pathFormat.Xindex];
-								if (!string.IsNullOrWhiteSpace(pathFormat.Xremove))
-										xStr = xStr.Replace(pathFormat.Xremove, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Xremove0))
+										xStr = xStr.Replace(pathFormat.Xremove0, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Xremove1))
+										xStr = xStr.Replace(pathFormat.Xremove1, "");
 								if (!int.TryParse(xStr, out int x))
 										return;
 								X = x;
 
 								var yStr = parts[pathFormat.Yindex];
-								if (!string.IsNullOrWhiteSpace(pathFormat.Yremove))
-										yStr = yStr.Replace(pathFormat.Yremove, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Yremove0))
+										yStr = yStr.Replace(pathFormat.Yremove0, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Yremove1))
+										yStr = yStr.Replace(pathFormat.Yremove1, "");
 								if (!int.TryParse(yStr, out int y))
 										return;
 								Y = y;
 
 								var zStr = parts[pathFormat.Zindex];
-								if (!string.IsNullOrWhiteSpace(pathFormat.Zremove))
-										zStr = zStr.Replace(pathFormat.Zremove, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Zremove0))
+										zStr = zStr.Replace(pathFormat.Zremove0, "");
+								if (!string.IsNullOrWhiteSpace(pathFormat.Zremove1))
+										zStr = zStr.Replace(pathFormat.Zremove1, "");
 								if (!int.TryParse(zStr, out int z))
 										return;
 								Zoom = z;
