@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileWorker", "TileWorker\TileWorker.csproj", "{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTestProject", "NUnitTestProject\NUnitTestProject.csproj", "{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE93AB94-1D73-4E5D-91A2-A018007A44A7}
+	EndGlobalSection
+EndGlobal
