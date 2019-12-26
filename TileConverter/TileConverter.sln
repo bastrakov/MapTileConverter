@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileWorker", "TileWorker\TileWorker.csproj", "{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TileWorker", "TileWorker\TileWorker.csproj", "{4DEC5D60-3C88-4D4A-AB8F-4C0D33EE7240}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTestProject", "NUnitTestProject\NUnitTestProject.csproj", "{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NUnitTestProject", "NUnitTestProject\NUnitTestProject.csproj", "{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileWorkerUI", "TileWorkerUI\TileWorkerUI.csproj", "{F63B7CE3-2F3C-429C-9087-9DD91FD95A83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D812D7CF-2AC4-4110-A4FF-AF9C7AB2458F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F63B7CE3-2F3C-429C-9087-9DD91FD95A83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F63B7CE3-2F3C-429C-9087-9DD91FD95A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F63B7CE3-2F3C-429C-9087-9DD91FD95A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F63B7CE3-2F3C-429C-9087-9DD91FD95A83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

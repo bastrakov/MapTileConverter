@@ -1,0 +1,55 @@
+﻿<Window x:Class="TileWorkerUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TileWorkerUI"
+        mc:Ignorable="d"
+				d:DataContext="{d:DesignInstance Type=local:MainWinViewModel}"
+        Title="Spherical/Wgs84 converter" Height="450" Width="400">
+
+		<StackPanel Orientation="Vertical">
+
+				<Label>Select type:</Label>
+
+				<StackPanel Orientation="Horizontal" Margin="20 0 20 10">
+						<RadioButton GroupName="convertType" IsChecked="{Binding SphericalToWgs84}">From Spherical To Wgs84</RadioButton>
+						<Label Width="30"/>
+						<RadioButton GroupName="convertType" IsChecked="{Binding Wgs84ToSpherical}">From Wgs84 To Spherical</RadioButton>
+				</StackPanel>
+
+				<Label>Select tile's directory:</Label>
+
+				<StackPanel Orientation="Horizontal" Margin="20 0 20 0" Height="30" >
+						<TextBox Width="300" Text="{Binding Path=InDir}"></TextBox>
+						<Label Width="10"/>
+						<Button Padding="10" Command="{Binding OpenInDirCommand}">...</Button>
+				</StackPanel>
+
+				<Label>Tile file XYZ-mask:</Label>
+
+				<TextBox Width="300" Text="{Binding Path=InFileMask}"></TextBox>
+
+				<Label Margin="0 0 0 20">(As example: \z18\x80797\y165944.jpg => \z{2}\{0}\{1}.jpg)</Label>
+
+				<Label>Select output directory:</Label>
+
+				<StackPanel Orientation="Horizontal" Margin="20 0 20 0" Height="30">
+						<TextBox Width="300" Text="{Binding Path=OutDir}"></TextBox>
+						<Label Width="10"/>
+						<Button Padding="10" Command="{Binding OpenOutDirCommand}">...</Button>
+				</StackPanel>
+
+				<Label>Out file XYZ-mask:</Label>
+
+				<TextBox Width="300" Text="{Binding Path=OutFileMask}"></TextBox>
+
+				<Label Margin="20 20 20 20" Background="LightGreen" Content="{Binding Path=ReportMsg}"/>
+
+				<Button Margin="20 0 20 10" Height="30" Command="{Binding ConvertCommand}">
+						Convert
+				</Button>
+
+		</StackPanel>
+
+</Window>
