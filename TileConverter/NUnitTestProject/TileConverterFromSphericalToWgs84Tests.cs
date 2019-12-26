@@ -16,7 +16,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test0()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(0, 0, 0);
+						var result = new TileConverter().TileFromSphericalToWgs84(0, 0, 0);
 						Assert.True(result.NeedTileIndex.Count == 1);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 0);
 				}
@@ -24,7 +24,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test1()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(1, 0, 1);
+						var result = new TileConverter().TileFromSphericalToWgs84(1, 0, 1);
 						Assert.True(result.NeedTileIndex.Count == 2);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 1);
 				}
@@ -32,7 +32,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test3()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(5, 2, 3);
+						var result = new TileConverter().TileFromSphericalToWgs84(5, 2, 3);
 						Assert.True(result.NeedTileIndex.Count == 2);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 2);
 				}
@@ -40,7 +40,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test4()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(10, 4, 4);
+						var result = new TileConverter().TileFromSphericalToWgs84(10, 4, 4);
 						Assert.True(result.NeedTileIndex.Count == 2);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 4);
 				}
@@ -48,7 +48,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test18()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(165944, 80801, 18);
+						var result = new TileConverter().TileFromSphericalToWgs84(165944, 80801, 18);
 						Assert.True(result.NeedTileIndex.Count == 2);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 159);
 						var testNeedTileIndexFirst = result.NeedTileIndex.First();
@@ -60,7 +60,7 @@ namespace NUnitTestProject
 				[Test]
 				public void FromSphericalToWgs84Test19()
 				{
-						var result = TileConverter.TileFromSphericalToWgs84(331889, 161602, 19);
+						var result = new TileConverter().TileFromSphericalToWgs84(331889, 161602, 19);
 						Assert.True(result.NeedTileIndex.Count == 2);
 						Assert.True(result.Shift.X == 0 && result.Shift.Y == 62);
 						var testNeedTileIndexFirst = result.NeedTileIndex.First();

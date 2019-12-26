@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -12,7 +11,7 @@ namespace TileWorker.Model
 				public int NewY { set; get; } = 0;
 				public Point Shift { set; get; }
 
-				//1 tile: asis. 2 tiles: Top-Bottom. 4 tiles: LftTop-LeftBottom-RightTop-RightBottom
+				//1 tile: just copy. 2 tiles: Top-Bottom. 4 tiles: LftTop-LeftBottom-RightTop-RightBottom
 				public List<Point> NeedTileIndex = new List<Point>();
 
 				public TileReplace(int x, int y, int zoom)

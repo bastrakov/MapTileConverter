@@ -8,11 +8,10 @@ using TileWorker.TileMath;
 
 namespace TileWorker
 {
-
 		public class TileConverter
 		{
 
-				public static void ConvertFromSphericalToWgs84(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
+				public void ConvertFromSphericalToWgs84(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
 				{
 						var tileIndexList = ReadAllFiles(inTilesDir, xyzInPathFormat);
 						if (tileIndexList.Count > 0)
@@ -26,7 +25,7 @@ namespace TileWorker
 						}
 				}
 
-				public static void ConvertFromWgs84ToSpherical(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
+				public void ConvertFromWgs84ToSpherical(string inTilesDir, string xyzInPathFormat, string outTilesDir, string xyzOutPathFormat)
 				{
 						var tileIndexList = ReadAllFiles(inTilesDir, xyzInPathFormat);
 						if (tileIndexList.Count > 0)
@@ -40,7 +39,7 @@ namespace TileWorker
 						}
 				}
 
-				public static TileReplace TileFromSphericalToWgs84(int sphericalTileIndexX, int sphericalTileIndexY, int zoom)
+				public TileReplace TileFromSphericalToWgs84(int sphericalTileIndexX, int sphericalTileIndexY, int zoom)
 				{
 						var leftTop = TileMathBase.TileXY2PixelXY(sphericalTileIndexX, sphericalTileIndexY);
 						SphericalTileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom, out double latitude, out double longitude);
@@ -48,7 +47,7 @@ namespace TileWorker
 						return FindReplace(sphericalTileIndexX, sphericalTileIndexY, zoom, resultXY);
 				}
 
-				public static TileReplace TileFromWgs84ToSpherical(int wgs84TileIndexX, int wgs84TileIndexY, int zoom)
+				public TileReplace TileFromWgs84ToSpherical(int wgs84TileIndexX, int wgs84TileIndexY, int zoom)
 				{
 						var leftTop = TileMathBase.TileXY2PixelXY(wgs84TileIndexX, wgs84TileIndexY);
 						var latlon = Wgs84TileMath.PixelXYToLatLong(leftTop.X, leftTop.Y, zoom);
@@ -56,7 +55,7 @@ namespace TileWorker
 						return FindReplace(wgs84TileIndexX, wgs84TileIndexY, zoom, new Point(pixelX, pixelY));
 				}
 
-				private static void SaveTiles(string xyzInPathFormat, string xyzOutPathFormat, IEnumerable<TileReplace> tileReplacesList)
+				private void SaveTiles(string xyzInPathFormat, string xyzOutPathFormat, IEnumerable<TileReplace> tileReplacesList)
 				{
 						foreach (var tileIndex in tileReplacesList)
 						{
@@ -76,7 +75,7 @@ namespace TileWorker
 						}
 				}
 
-				private static List<TileIndex> ReadAllFiles(string dirPath, string xyzPathFormat)
+				private List<TileIndex> ReadAllFiles(string dirPath, string xyzPathFormat)
 				{
 						var result = new List<TileIndex>();
 						var allfiles = Directory.GetFiles(dirPath, "*.*", SearchOption.AllDirectories);
@@ -90,7 +89,7 @@ namespace TileWorker
 						return result;
 				}
 
-				private static TileReplace FindReplace(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point resultXY)
+				private TileReplace FindReplace(int sphericalTileIndexX, int sphericalTileIndexY, int zoom, Point resultXY)
 				{
 						var tileXYindex = TileMathBase.PixelXY2TileXY(resultXY.X, resultXY.Y);
 

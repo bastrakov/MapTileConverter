@@ -17,7 +17,7 @@ namespace NUnitTestProject
 				[Test]
 				public void TestGoogleToYandex()
 				{
-						TileConverter.ConvertFromSphericalToWgs84(
+						new TileConverter().ConvertFromSphericalToWgs84(
 								@"D:\temp\0000000\goo11\sat\",
 								@"z{2}\{1}\{0}.jpg",
 								@"D:\temp\0000000\222222\",
@@ -28,7 +28,7 @@ namespace NUnitTestProject
 				[Test]
 				public void TestYandexToGoogle()
 				{
-						TileConverter.ConvertFromWgs84ToSpherical(
+						new TileConverter().ConvertFromWgs84ToSpherical(
 								@"D:\temp\0000000\ya222\",
 								@"z{2}\162\x{0}\79\y{1}.jpg",
 								@"D:\temp\0000000\222222\",
