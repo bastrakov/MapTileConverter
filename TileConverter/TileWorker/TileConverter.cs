@@ -1,4 +1,5 @@
 ﻿
+using NLog;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -57,8 +58,13 @@ namespace TileWorker
 
 				private void SaveTiles(string xyzInPathFormat, string xyzOutPathFormat, IEnumerable<TileReplace> tileReplacesList)
 				{
+						LogManager.GetCurrentClassLogger().Debug($"SaveTiles: {tileReplacesList.Count()}");
+
 						foreach (var tileIndex in tileReplacesList)
 						{
+								var firstInTile = tileIndex.NeedTileIndex.First();
+								LogManager.GetCurrentClassLogger().Debug($"next Tile: {firstInTile.X}/{firstInTile.Y} -> {tileIndex.NewX}/{tileIndex.NewY}");
+
 								var isAllTileFilesExist = true;
 								foreach (var tileFile in tileIndex.NeedTileIndex)
 								{
@@ -70,6 +76,7 @@ namespace TileWorker
 								if (isAllTileFilesExist)
 								{
 										var outTileFilePath = string.Format(xyzOutPathFormat, tileIndex.NewX, tileIndex.NewY, tileIndex.Zoom);
+										LogManager.GetCurrentClassLogger().Debug($"All tiles found. Shift={tileIndex.Shift.X}/{tileIndex.Shift.Y}. Path={outTileFilePath}");
 										ImageHelper.JoinTilesToOneImageAndSave(tileIndex, xyzInPathFormat, outTileFilePath);
 								}
 						}
@@ -86,6 +93,8 @@ namespace TileWorker
 										.Where(y => !string.IsNullOrWhiteSpace(y.FullPath))
 										.ToList();
 						}
+
+						LogManager.GetCurrentClassLogger().Debug($"ReadAllFiles: {result.Count}");
 						return result;
 				}
 

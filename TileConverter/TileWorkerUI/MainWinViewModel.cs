@@ -12,6 +12,7 @@ namespace TileWorkerUI
 		{
 
 				private bool _canExecute = true;
+				private bool _isWorking = false;
 
 				public event PropertyChangedEventHandler PropertyChanged;
 
@@ -155,7 +156,7 @@ namespace TileWorkerUI
 
 				public void DoConvert()
 				{
-						if (CheckAllData()) 
+						if (!_isWorking && CheckAllData()) 
 						{
 								if (SphericalToWgs84)
 										new TileConverter().ConvertFromSphericalToWgs84(InDir, InFileMask, OutDir, OutFileMask);
